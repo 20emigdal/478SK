@@ -9,81 +9,87 @@
 import SpriteKit
 import GameplayKit
 
+var label = SKLabelNode(text: "_____")
+var label2 = SKLabelNode(text: "begin")
+var label3 = SKLabelNode(text: "thank you for meditating!")
+
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    let blue = UIColor(red: 0, green: 165/255, blue: 200/255, alpha: 1)
+    var go = 0
+    var alreadyRan = false
+    
+    @objc func tap(recognizer: UIGestureRecognizer) {
+        let location = recognizer.location(in: view)
+        let newSpot = CGPoint(x: view!.frame.width*7/8, y: view!.frame.height*7/8)
+        if label2.position.x - 20 < location.x && location.x < label2.position.x + 20  {
+            if label2.position.y - 20 < location.y && location.y < label2.position.y + 20 {
+                let begun = SKAction.move(to: newSpot, duration: 1)
+                label2.text = "end"
+                label2.run(begun)
+                    go += 1
+            }
+        }
+        if newSpot.x - 20 < location.x && location.x < newSpot.x + 20 {
+            if newSpot.y - 20 < location.y && location.y < newSpot.y + 20 {
+                print("you got it")
+                alreadyRan = true
+                endMeditation()
+            }
+        }
+        
+        if go == 1 {
+            meditate()
+            go += 1
+        }
+    }
     
     override func didMove(to view: SKView) {
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        label.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        addChild(label)
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
+        label2.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        addChild(label2)
+        
+        label3.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        label3.isHidden = true
+        addChild(label3)
+            
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tap))
+        view.addGestureRecognizer(recognizer)
     }
     
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
+    func meditate() {
+        label.text = "inhale"
+        let scale = SKAction.scale(by: 4, duration: 1.75)
+        label.run(scale)
+            
+        DispatchQueue.main.asyncAfter(deadline : .now() + 2) {
+            label.text = "hold"
+            let color = SKAction.colorize(with: self.blue, colorBlendFactor: 1.0, duration: 3.4)
+            label.run(color)
         }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+            
+        DispatchQueue.main.asyncAfter(deadline : .now() + 5.5) {
+            label.color = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+            label.text = "exhale"
+            let scale2 = SKAction.scale(by: 0.25, duration: 3.75)
+            label.run(scale2)
         }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
+            if self.alreadyRan == false {
+                self.meditate()
+            }
+        }
+        
+        print(alreadyRan)
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+    func endMeditation() {
+        print("wut")
+        label.isHidden = true
+        label2.isHidden = true
+        label3.isHidden = false
     }
 }
