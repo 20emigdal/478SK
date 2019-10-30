@@ -11,6 +11,13 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    override open var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
     
     override func viewDidLoad() {
         let scene = GameScene(size: view.frame.size)

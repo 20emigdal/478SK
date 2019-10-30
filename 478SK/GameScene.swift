@@ -19,44 +19,36 @@ class GameScene: SKScene {
     var go = 0
     var alreadyRan = false
     
-    @objc func tap(recognizer: UIGestureRecognizer) {
-        let location = recognizer.location(in: view)
-        let newSpot = CGPoint(x: view!.frame.width*7/8, y: view!.frame.height*7/8)
-        if label2.position.x - 20 < location.x && location.x < label2.position.x + 20  {
-            if label2.position.y - 20 < location.y && location.y < label2.position.y + 20 {
-                let begun = SKAction.move(to: newSpot, duration: 1)
-                label2.text = "end"
-                label2.run(begun)
-                    go += 1
-            }
-        }
-        if newSpot.x - 20 < location.x && location.x < newSpot.x + 20 {
-            if newSpot.y - 20 < location.y && location.y < newSpot.y + 20 {
-                print("you got it")
-                alreadyRan = true
-                endMeditation()
-            }
-        }
-        
-        if go == 1 {
-            meditate()
-            go += 1
-        }
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        var touch = location(in: UIView?)
+//        let newSpot = CGPoint(x: view!.frame.width*7/8, y: view!.frame.height*7/8)
+//        if label2.position.x - 20 < touch.x && touch.x < label2.position.x + 20  {
+//            if label2.position.y - 20 < touch.y && touch.y < label2.position.y + 20 {
+//                let begun = SKAction.move(to: newSpot, duration: 1)
+//                label2.text = "end"
+//                label2.run(begun)
+//                go += 1
+//            }
+//        }
+//        if newSpot.x - 20 < touch.x && touch.x < touch.x + 20 {
+//            if newSpot.y - 20 < touch.y && touch.y < touch.y + 20 {
+//                print("you got it")
+//                alreadyRan = true
+//                endMeditation()
+//            }
+//        }
+    //      }
     
     override func didMove(to view: SKView) {
         label.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         addChild(label)
-            
+        
         label2.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         addChild(label2)
-        
+            
         label3.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         label3.isHidden = true
         addChild(label3)
-            
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tap))
-        view.addGestureRecognizer(recognizer)
     }
     
     func meditate() {
