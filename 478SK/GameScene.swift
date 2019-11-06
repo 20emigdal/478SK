@@ -21,31 +21,42 @@ class GameScene: SKScene {
     var alreadyRan = false
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let topWidth = view!.frame.width*7/8
+        let topHeight = view!.frame.height*1/8
         let touch: UITouch = touches.first!
         let place: CGPoint = touch.location(in: view)
         let newSpot: CGPoint = CGPoint(x: view!.frame.width*7/8, y: view!.frame.height*7/8)
-        print("x:")
-        print(place.x)
-        print("y:")
-        print(place.y)
-        if going.position.x - 20 < place.x && place.x < going.position.x + 20  {
-            if going.position.y - 20 < place.y && place.y < going.position.y + 20 {
+        let sceneNodes = nodes(at: place)
+
+        if going.position.x - 30 < place.x && place.x < going.position.x + 30  {
+            if going.position.y - 30 < place.y && place.y < going.position.y + 30 {
                 let begun = SKAction.move(to: newSpot, duration: 1)
                 going.text = "stop"
                 going.run(begun)
                 meditate()
             }
         }
-        if 330.0 < place.x && place.x < 400 {
-            if 85.0 < place.y && place.y < 120.0 {
+        
+        if topWidth - 30 < place.x && place.x < topWidth + 30 {
+            if topHeight - 30 < place.y && place.y < topHeight + 30 {
                 alreadyRan = !alreadyRan
             }
         }
+        
         if alreadyRan == false {
             label.isHidden = false
             thanks.isHidden = true
         } else {
             endMeditation()
+        }
+        
+        for sceneNode in sceneNodes {
+            if sceneNode == textline && textline.isHidden == false {
+               //text
+            }
+            if sceneNode == hotline && hotline.isHidden == false{
+                //call
+            }
         }
     }
     
@@ -59,6 +70,14 @@ class GameScene: SKScene {
         thanks.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         thanks.isHidden = true
         addChild(thanks)
+        
+        hotline.position = CGPoint(x: view.frame.width * 2 / 3, y: view.frame.height * 2/3)
+        hotline.isHidden = true
+        addChild(hotline)
+        
+        textline.position = CGPoint(x: view.frame.width * 3 / 4, y: view.frame.height * 3/4)
+        textline.isHidden = true
+        addChild(textline)
     }
     
     func meditate() {
@@ -91,5 +110,7 @@ class GameScene: SKScene {
         label.isHidden = true
         going.text = "go"
         thanks.isHidden = false
+        hotline.isHidden = false
+        textline.isHidden = false
     }
 }
