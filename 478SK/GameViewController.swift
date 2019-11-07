@@ -24,6 +24,14 @@ class GameViewController: UIViewController {
         let skView = view as! SKView
         skView.isMultipleTouchEnabled = true
         skView.presentScene(scene)
+        
+        super.viewDidLoad()
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
+    @objc func appMovedToBackground() {
+        print("App moved to background!")
+        
+    }
 }
