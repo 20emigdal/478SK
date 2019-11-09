@@ -32,6 +32,5 @@ class GameViewController: UIViewController {
     
     @objc func appMovedToBackground() {
         print("App moved to background!")
-        
     }
 }

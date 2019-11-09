@@ -16,6 +16,8 @@ var textline = SKLabelNode(text: "Crisis Text Line:")
 var textline2 = SKLabelNode(text: "text HOME to 471471")
 var hotline = SKLabelNode(text: "Suicide Prevention Hotline:")
 var hotline2 = SKLabelNode(text: "1-800-273-8255")
+var suggest = SKLabelNode(text: "Have suggestions for us?")
+var suggest2 = SKLabelNode(text: "bit.ly/478app")
 
 class GameScene: SKScene {
     
@@ -44,14 +46,14 @@ class GameScene: SKScene {
             }
         }
         
-        if hotline2.position.x - 30 < place.x && place.x < hotline.position.x + 30 {
-            if hotline2.position.y - 30 < place.y && place.y < hotline.position.y + 30 {
+        if (view!.frame.width - hotline2.position.x) - 30 < place.x && place.x < (view!.frame.width - hotline.position.x) + 30 {
+            if (view!.frame.height - hotline2.position.y) - 30 < place.y && place.y < (view!.frame.height - hotline.position.y) + 30 {
                 print("call")
             }
         }
         
-        if textline2.position.x - 30 < place.x && place.x < textline2.position.x + 30 {
-            if textline2.position.y - 30 < place.y && place.y < textline2.position.y + 30 {
+        if (view!.frame.width - textline2.position.x) - 30 < place.x && place.x < (view!.frame.width - textline2.position.x) + 30 {
+            if (view!.frame.height - textline2.position.y) - 30 < place.y && place.y < (view!.frame.height - textline2.position.y) + 30 {
                 print("text")
             }
         }
@@ -94,6 +96,8 @@ class GameScene: SKScene {
         textline2.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/4 - 30)
         textline2.isHidden = true
         addChild(textline2)
+        
+        self.reset()
     }
     
     func meditate() {
@@ -119,9 +123,7 @@ class GameScene: SKScene {
         
         DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
             going.text = "stop"
-            if self.alreadyRan == false {
-                self.meditate()
-            }
+            self.meditate()
         }
     }
     
@@ -133,5 +135,22 @@ class GameScene: SKScene {
         hotline2.isHidden = false
         textline2.isHidden = false
         textline.isHidden = false
+    }
+    
+    func reset() {
+        print("reset")
+        label.text = "_____"
+        label.position = CGPoint(x: view!.frame.width / 2, y: view!.frame.height / 2)
+        let scale = SKAction.scale(to: 1, duration: 1)
+        label.run(scale)
+        
+        going.text = "begin"
+        going.position = CGPoint(x: view!.frame.width / 2, y: view!.frame.height / 2)
+        
+        thanks.isHidden = true
+        hotline.isHidden = true
+        hotline2.isHidden = true
+        textline2.isHidden = true
+        textline.isHidden = true
     }
 }
