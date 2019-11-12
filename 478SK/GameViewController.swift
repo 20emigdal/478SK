@@ -10,6 +10,27 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
+class MFMessageComposeViewController : UINavigationController {
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+    }
+    
+    func displayMessageInterface() {
+        let composeVC = MFMessageComposeViewController()
+        composeVC.messageComposeDelegate = self
+        
+        // Configure the fields of the interface.
+        composeVC.recipients = ["471471"]
+        composeVC.body = "HOME"
+        
+        // Present the view controller modally.
+        if MFMessageComposeViewController.canSendText() {
+            self.present(composeVC, animated: true, completion: nil)
+        } else {
+            print("Can't send messages.")
+        }
+    }
+}
+
 class GameViewController: UIViewController {
     override open var shouldAutorotate: Bool {
         return false
@@ -24,13 +45,5 @@ class GameViewController: UIViewController {
         let skView = view as! SKView
         skView.isMultipleTouchEnabled = true
         skView.presentScene(scene)
-        
-        super.viewDidLoad()
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
-    }
-    
-    @objc func appMovedToBackground() {
-        print("App moved to background!")
     }
 }

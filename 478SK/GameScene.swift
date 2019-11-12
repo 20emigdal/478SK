@@ -50,11 +50,13 @@ class GameScene: SKScene {
             if (view!.frame.height - hotline2.position.y) - 30 < place.y && place.y < (view!.frame.height - hotline.position.y) + 30 {
                 print("call")
             }
-        }
-        
-        if (view!.frame.width - textline2.position.x) - 30 < place.x && place.x < (view!.frame.width - textline2.position.x) + 30 {
-            if (view!.frame.height - textline2.position.y) - 30 < place.y && place.y < (view!.frame.height - textline2.position.y) + 30 {
+            else if (view!.frame.height - textline2.position.y) - 30 < place.y && place.y < (view!.frame.height - textline2.position.y) + 30 {
                 print("text")
+            }
+            else if (view!.frame.height - suggest2.position.y) -  30 < place.y && place.y < (view!.frame.height - suggest2.position.y) {
+                print("url")
+                let url = URL(string: "https://forms.gle/GwvviTAt1HTgaeEs6")
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
             }
         }
         
@@ -65,6 +67,8 @@ class GameScene: SKScene {
             textline.isHidden = true
             hotline2.isHidden = true
             textline2.isHidden = true
+            suggest.isHidden = true
+            suggest2.isHidden = true
         } else {
             endMeditation()
         }
@@ -97,6 +101,14 @@ class GameScene: SKScene {
         textline2.isHidden = true
         addChild(textline2)
         
+        suggest.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/6)
+        suggest.isHidden = true
+        addChild(suggest)
+        
+        suggest2.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/6 - 30)
+        suggest2.isHidden = true
+        addChild(suggest2)
+        
         self.reset()
     }
     
@@ -108,21 +120,27 @@ class GameScene: SKScene {
             
         DispatchQueue.main.asyncAfter(deadline : .now() + 2) {
             label.text = "hold"
-            going.text = "stop"
             let color = SKAction.colorize(with: self.blue, colorBlendFactor: 1.0, duration: 3.4)
             label.run(color)
+            if thanks.isHidden == true {
+                going.text = "stop"
+            }
         }
             
         DispatchQueue.main.asyncAfter(deadline : .now() + 5.5) {
             label.color = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
             label.text = "exhale"
-            going.text = "stop"
             let scale2 = SKAction.scale(by: 0.25, duration: 3.75)
             label.run(scale2)
+            if thanks.isHidden == true {
+                going.text = "stop"
+            }
         }
         
         DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
-            going.text = "stop"
+            if thanks.isHidden == true {
+                going.text = "stop"
+            }
             self.meditate()
         }
     }
@@ -135,6 +153,8 @@ class GameScene: SKScene {
         hotline2.isHidden = false
         textline2.isHidden = false
         textline.isHidden = false
+        suggest.isHidden = false
+        suggest2.isHidden = false
     }
     
     func reset() {
