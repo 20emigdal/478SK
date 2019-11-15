@@ -25,7 +25,6 @@ class GameViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("loaded")
         let scene = GameScene(size: view.frame.size)
         let skView = view as! SKView
         skView.isMultipleTouchEnabled = true

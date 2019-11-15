@@ -22,10 +22,13 @@ var suggest2 = SKLabelNode(text: "bit.ly/478app")
 class GameScene: SKScene {
     
     let blue = UIColor(red: 0, green: 165/255, blue: 200/255, alpha: 1)
-    var ran: Bool = false
+    var ran = false
+    var blah = false
     
     override func sceneDidLoad() {
-        print("got it")
+        if alreadyRan == true {
+            reset()
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -40,6 +43,7 @@ class GameScene: SKScene {
                 let begun = SKAction.move(to: newSpot, duration: 1)
                 going.text = "stop"
                 going.run(begun)
+                blah = true
                 meditate()
             }
         }
@@ -115,45 +119,61 @@ class GameScene: SKScene {
     }
     
     func meditate() {
-        going.text = "stop"
-        label.text = "inhale"
-        let scale = SKAction.scale(by: 4, duration: 1.75)
-        label.run(scale)
-            
-        DispatchQueue.main.asyncAfter(deadline : .now() + 2) {
-            label.text = "hold"
-            let color = SKAction.colorize(with: self.blue, colorBlendFactor: 1.0, duration: 3.4)
-            label.run(color)
-            if thanks.isHidden == true {
-                going.text = "stop"
-            }
-            if alreadyRan == true {
-                reset()
-            }
-        }
-            
-        DispatchQueue.main.asyncAfter(deadline : .now() + 5.5) {
-            label.color = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-            label.text = "exhale"
-            let scale2 = SKAction.scale(by: 0.25, duration: 3.75)
-            label.run(scale2)
-            if thanks.isHidden == true {
-                going.text = "stop"
-            }
-            if alreadyRan == true {
-                reset()
-            }
+        if blah == true {
+            going.text = "stop"
+            label.text = "inhale"
+            let scale = SKAction.scale(by: 4, duration: 1.75)
+            label.run(scale)
+        } else {
+            self.reset()
         }
         
-        DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
-            if thanks.isHidden == true {
-                going.text = "stop"
+        if blah == true {
+            DispatchQueue.main.asyncAfter(deadline : .now() + 2) {
+                label.text = "hold"
+                let color = SKAction.colorize(with: self.blue, colorBlendFactor: 1.0, duration: 3.4)
+                label.run(color)
+                if thanks.isHidden == true {
+                    going.text = "stop"
+                }
+                if alreadyRan == true {
+                    self.reset()
+                }
             }
-            if alreadyRan == true {
-                reset()
-            } else {
-                self.meditate()
+        } else {
+            self.reset()
+        }
+        
+        if blah == true {
+            DispatchQueue.main.asyncAfter(deadline : .now() + 5.5) {
+                label.color = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+                label.text = "exhale"
+                let scale2 = SKAction.scale(by: 0.25, duration: 3.75)
+                label.run(scale2)
+                if thanks.isHidden == true {
+                    going.text = "stop"
+                }
+                if alreadyRan == true {
+                    self.reset()
+                }
             }
+        } else {
+            self.reset()
+        }
+        
+        if blah == true {
+            DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
+                if thanks.isHidden == true {
+                    going.text = "stop"
+                }
+                if alreadyRan == true {
+                    self.reset()
+                } else if self.blah == true {
+                    self.meditate()
+                }
+            }
+        } else {
+            self.reset()
         }
     }
     
@@ -171,6 +191,26 @@ class GameScene: SKScene {
     
     func reset() {
         print("reset")
-        //
+        
+        thanks.isHidden = true
+        hotline.isHidden = true
+        textline.isHidden = true
+        hotline2.isHidden = true
+        textline2.isHidden = true
+        suggest.isHidden = true
+        suggest2.isHidden = true
+        ran = false
+        blah = false
+
+        label.text = "_____"
+        label.isHidden = false
+        let resetLabel = SKAction.scale(to: 2.0, duration: 0.5)
+        label.run(resetLabel)
+        
+        going.text = "begin"
+        let resetGoing = SKAction.move(to: CGPoint(x: view!.frame.width / 2, y: view!.frame.height / 2), duration: 0.5)
+        going.run(resetGoing, completion: {
+            alreadyRan = false
+        })
     }
 }
