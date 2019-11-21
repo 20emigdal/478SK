@@ -9,8 +9,8 @@
 import SpriteKit
 import GameplayKit
 
-var label = SKLabelNode(text: "_____")
-var going = SKLabelNode(text: "begin")
+var going = SKLabelNode(text: "stop")
+var label = SKLabelNode(text: "inhale")
 var thanks = SKLabelNode(text: "thank you for meditating!")
 var textline = SKLabelNode(text: "Crisis Text Line:")
 var textline2 = SKLabelNode(text: "text HOME to 471471")
@@ -26,10 +26,8 @@ class GameScene: SKScene {
     var blah = false
     
     override func sceneDidLoad() {
-        print("loaded")
-        if alreadyRan == true {
-            reset()
-        }
+        print("hello")
+        self.removeAllChildren()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -37,17 +35,6 @@ class GameScene: SKScene {
         let topHeight = view!.frame.height*1/8
         let touch: UITouch = touches.first!
         let place: CGPoint = touch.location(in: view)
-        let newSpot: CGPoint = CGPoint(x: view!.frame.width*7/8, y: view!.frame.height*7/8)
-
-        if going.position.x - 30 < place.x && place.x < going.position.x + 30  {
-            if going.position.y - 30 < place.y && place.y < going.position.y + 30 {
-                let begun = SKAction.move(to: newSpot, duration: 1)
-                going.text = "stop"
-                going.run(begun)
-                blah = true
-                meditate()
-            }
-        }
         
         if topWidth - 30 < place.x && place.x < topWidth + 30 {
             if topHeight - 30 < place.y && place.y < topHeight + 30 {
@@ -84,12 +71,12 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        going.position = CGPoint(x: view.frame.width*7/8, y: view.frame.height*7/8)
+        addChild(going)
+        
         label.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         addChild(label)
         
-        going.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
-        addChild(going)
-            
         thanks.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
         thanks.isHidden = true
         addChild(thanks)
@@ -117,19 +104,16 @@ class GameScene: SKScene {
         suggest2.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 1/6 - 30)
         suggest2.isHidden = true
         addChild(suggest2)
+        
+        meditate()
     }
     
     func meditate() {
-        if blah == true {
             going.text = "stop"
             label.text = "inhale"
             let scale = SKAction.scale(by: 4, duration: 1.75)
             label.run(scale)
-        } else {
-            self.reset()
-        }
-        
-        if blah == true {
+
             DispatchQueue.main.asyncAfter(deadline : .now() + 2) {
                 label.text = "hold"
                 let color = SKAction.colorize(with: self.blue, colorBlendFactor: 1.0, duration: 3.4)
@@ -137,15 +121,8 @@ class GameScene: SKScene {
                 if thanks.isHidden == true {
                     going.text = "stop"
                 }
-                if alreadyRan == true {
-                    self.reset()
-                }
             }
-        } else {
-            self.reset()
-        }
-        
-        if blah == true {
+
             DispatchQueue.main.asyncAfter(deadline : .now() + 5.5) {
                 label.color = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
                 label.text = "exhale"
@@ -154,28 +131,14 @@ class GameScene: SKScene {
                 if thanks.isHidden == true {
                     going.text = "stop"
                 }
-                if alreadyRan == true {
-                    self.reset()
-                }
             }
-        } else {
-            self.reset()
-        }
         
-        if blah == true {
             DispatchQueue.main.asyncAfter(deadline : .now() + 9.5) {
                 if thanks.isHidden == true {
                     going.text = "stop"
                 }
-                if alreadyRan == true {
-                    self.reset()
-                } else if self.blah == true {
-                    self.meditate()
-                }
+                self.meditate()
             }
-        } else {
-            self.reset()
-        }
     }
     
     func endMeditation() {
@@ -190,28 +153,8 @@ class GameScene: SKScene {
         suggest2.isHidden = false
     }
     
-    func reset() {
-        print("reset")
-        
-        thanks.isHidden = true
-        hotline.isHidden = true
-        textline.isHidden = true
-        hotline2.isHidden = true
-        textline2.isHidden = true
-        suggest.isHidden = true
-        suggest2.isHidden = true
-        ran = false
-        blah = false
-
-        label.text = "_____"
-        label.isHidden = false
-        let resetLabel = SKAction.scale(to: 2.0, duration: 0.5)
-        label.run(resetLabel)
-        
-        going.text = "begin"
-        let resetGoing = SKAction.move(to: CGPoint(x: view!.frame.width / 2, y: view!.frame.height / 2), duration: 0.5)
-        going.run(resetGoing, completion: {
-            alreadyRan = false
-        })
+    deinit {
+        removeAllChildren()
+        print("alrighty")
     }
 }

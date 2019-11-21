@@ -12,6 +12,9 @@ import GameplayKit
 
 class GameViewController: UIViewController {
     
+    
+    @IBOutlet weak var begin: UIButton!
+    
     override open var shouldAutorotate: Bool {
         return false
     }
@@ -25,15 +28,15 @@ class GameViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let scene = GameScene(size: view.frame.size)
+        
+    }
+    
+    @IBAction func button(_ sender: UIButton) {
+        let scene = GameScene(size: view!.frame.size)
         let skView = view as! SKView
         skView.isMultipleTouchEnabled = true
         skView.presentScene(scene)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        print("gone")
-        let skView = view as! SKView
-        skView.isPaused = true
+        
+        begin.isHidden = true
     }
 }
