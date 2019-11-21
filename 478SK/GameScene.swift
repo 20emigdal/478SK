@@ -26,6 +26,7 @@ class GameScene: SKScene {
     var blah = false
     
     override func sceneDidLoad() {
+        print("loaded")
         if alreadyRan == true {
             reset()
         }
